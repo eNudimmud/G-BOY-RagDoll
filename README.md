@@ -56,12 +56,13 @@ Ne s'ouvre pas en `file://`, car le navigateur bloque alors le chargement du .gl
 
 ## Rendu
 
-- Tone mapping Neutral, couleurs de base prises sur les références de JD (rouge feutre, jaune moutarde, beige, crème, violet lavande). Les yeux ne passent pas par le tone mapping, donc ils restent blancs purs.
-- Micro-reliefs générés au chargement (feutre, coton, côtes des chaussettes), sans fichier supplémentaire.
+- **v3 : textures peintes par IA d'après la DA de JD** (`refs_jd/da_turnaround_4views.jpg` et les 4 vues) : 13 planches Nano Banana Pro 2K, générées à partir de rendus Blender de chaque angle, puis projetées depuis plusieurs caméras et cuites sur l'UV de chaque pièce. Le mélange est pondéré par la visibilité, avec un filtre de palette qui écarte les écarts de l'IA, des teintes recalées sur la DA et un remplissage des zones cachées. Cape et capuche en 2048, les autres pièces en 1024 ou 512. Le corps, la tête et les mains restent en noir mat uni, et les yeux en blanc émissif lisse.
+- Tone mapping linéaire, exposition 1,12. Le mode Neutral écrasait le rouge feutre saturé, qui sortait cramoisi foncé. Les yeux ne passent pas par le tone mapping, donc ils restent blancs purs.
+- Micro-reliefs feutre et coton générés au chargement, sans fichier supplémentaire, à une échelle calée sur la densité UV de chaque pièce.
 
 ## Vérification
 
-- `test/polish.mjs` + `test/sheet.py` : planche de 18 gros plans, avec les angles signalés par JD (couché, vu d'en bas, de dos, sous la cape, intérieur de la capuche, tenu par la tête, le pied ou le bras, après « Debout »). Résultats dans `polish_before.png` (v1), `polish_after.png` (v2) et `polish_after2.png` (v2.1).
+- `test/polish.mjs` + `test/sheet.py` : planche de 18 gros plans, avec les angles signalés par JD (couché, vu d'en bas, de dos, sous la cape, intérieur de la capuche, tenu par la tête, le pied ou le bras, après « Debout »). Résultats dans `polish_before.png` (v1), `polish_after.png` (v2) `polish_after2.png` (v2.1) et `polish_after3.png` (v3, textures IA).
 - `test/close.mjs` : très gros plans de la nuque et de la capuche, debout et couché.
 - `test/video.mjs` : images de `ragdoll_demo.mp4`. `test/interact.mjs` : vrais événements souris et tactiles. `test/jitter.mjs` : vitesses au repos.
 - Le mode `?test` passe en pas manuel (`window.__app.advance(s)`), et `?test&debug` affiche les colliders.
