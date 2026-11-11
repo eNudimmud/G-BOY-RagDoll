@@ -80,3 +80,16 @@ Ne s'ouvre pas en `file://`, car le navigateur bloque alors le chargement du .gl
 - Le relèvement est un fondu cinématique, pas une vraie animation.
 - Les vêtements sont des coques fines (4 mm) : dans les poses extrêmes, on peut voir un léger froissement aux épaules et au col.
 - Le bundle JS fait environ 5 Mo (1,8 Mo gzip), à cause du WASM Rapier embarqué.
+
+## v5 — corps sans couture + rig plus précis (gratuit, 0 crédit)
+
+- **Corps noir en une seule pièce** : tête + torse + bras + bassin + jambes fusionnés en un seul maillage étanche
+  (remesh voxel + volumes de remplissage bassin/cuisses, 0 bord ouvert, 0 arête non-manifold, 32k tris).
+  Normales + couleur rebakées (2048), yeux inchangés (plats, affleurants, sans iris). Plus de coupure « Rayman » à la taille.
+- **Rig** : le corps est rigué d'abord, puis ses poids sont transférés au t-shirt et au short (4 influences max).
+  Séparation manche/torse sur le t-shirt : la manche suit le bras, le torse reste avec le buste.
+  Nouveaux os d'aide : `upper_arm_tw` / `forearm_tw` (twist) ; dans l'app, la clavicule (`shoulder`) prend 40 % du swing du bras
+  et `upper_arm_tw` 50 % du coude. Corps rétracté vers l'axe des os sous les vêtements (sans pli), gradient hanche→cuisse propre sous le short.
+- **Cape** : 4 points de collision par arête au lieu de 2 (cape/capuche déjà en double face).
+- Tests de poses Blender avant/après : `v5/pose_sheet_before_after.png`, gros plan bras levé `v5/pose_armraise_close_before_after.png`.
+  Levée de bras à 115° : le torse du t-shirt bouge de 31 mm au max (77 mm en v4).
