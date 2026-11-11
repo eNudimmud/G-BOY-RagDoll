@@ -1,10 +1,17 @@
 # G*BOY — ragdoll (Three.js + Rapier)
 
-App web statique et autonome, sans backend. Une fois construite, elle tourne hors ligne : three 0.187 et @dimforge/rapier3d-compat 0.21 (WASM embarqué) sont dans le bundle. Le modèle `gboy_pieces.glb` (2,4 Mo, 65 os) est copié dans `public/`.
+App web statique et autonome, sans backend. Une fois construite, elle tourne hors ligne : three 0.187 et @dimforge/rapier3d-compat 0.21 (WASM embarqué) sont dans le bundle. Le modèle `gboy.glb` (8,3 Mo, 65 os, 9 pièces) est copié dans `public/`.
 
 En ligne : https://enudimmud.github.io/G-BOY-RagDoll/
 
-## Le personnage : 10 pièces séparées (v2.1, 11.11.2026, passe de fidélité sur la planche de JD)
+## v4 (11.11.2026) : modèle HD généré depuis la DA de JD (Tripo v3.1 multi-vues), 9 pièces
+
+- Source : génération Tripo v3.1 multi-vues depuis la planche 4 vues de JD, Smart Segment + Complete Mesh Parts (Tripo), puis nettoyage, optimisation et rig dans Blender (`/workspace/bender/gboy_hq/gen3d/web/`, scripts `gen3d/scripts/stageA*.py`, `stageB_rig.py`).
+- `public/gboy.glb` : 8,3 Mo, environ 110k triangles, 9 maillages séparés (corps+tête, capuche, cape, nœud, t-shirt, short, jambes, chaussettes, baskets). Base color + normal map cuites depuis le HD, en WebP (2048 pour corps, capuche, cape et t-shirt ; 1024 pour le reste).
+- Même squelette de 65 os que la v3 (corps + 7 chaînes de cape × 6), donc même physique Rapier. Les colliders sont ajustés aux nouvelles proportions, et la cape garde 4,5 cm de marge par rapport au corps.
+- Yeux : ovales blancs plats, intégrés à la texture de la tête, non modifiés. Une légère émission les garde blancs à l'ombre.
+
+## (v3) Le personnage : 10 pièces séparées (v2.1, 11.11.2026, passe de fidélité sur la planche de JD)
 
 Reconstruit dans Blender comme un vrai personnage de jeu, en suivant la planche de pièces de JD. Chaque pièce a son maillage propre, ses UV et son matériau. Sources : `/workspace/bender/gboy_hq/pieces/` (`build_pieces.py`, `rig_pieces.py`, `render_*.py`).
 
@@ -56,13 +63,12 @@ Ne s'ouvre pas en `file://`, car le navigateur bloque alors le chargement du .gl
 
 ## Rendu
 
-- **v3 : textures peintes par IA d'après la DA de JD** (`refs_jd/da_turnaround_4views.jpg` et les 4 vues) : 13 planches Nano Banana Pro 2K, générées à partir de rendus Blender de chaque angle, puis projetées depuis plusieurs caméras et cuites sur l'UV de chaque pièce. Le mélange est pondéré par la visibilité, avec un filtre de palette qui écarte les écarts de l'IA, des teintes recalées sur la DA et un remplissage des zones cachées. Cape et capuche en 2048, les autres pièces en 1024 ou 512. Le corps, la tête et les mains restent en noir mat uni, et les yeux en blanc émissif lisse.
-- Tone mapping linéaire, exposition 1,12. Le mode Neutral écrasait le rouge feutre saturé, qui sortait cramoisi foncé. Les yeux ne passent pas par le tone mapping, donc ils restent blancs purs.
-- Micro-reliefs feutre et coton générés au chargement, sans fichier supplémentaire, à une échelle calée sur la densité UV de chaque pièce.
+- Tone mapping Neutral, couleurs de base prises sur les références de JD (rouge feutre, jaune moutarde, beige, crème, violet lavande). Les yeux ne passent pas par le tone mapping, donc ils restent blancs purs.
+- Micro-reliefs générés au chargement (feutre, coton, côtes des chaussettes), sans fichier supplémentaire.
 
 ## Vérification
 
-- `test/polish.mjs` + `test/sheet.py` : planche de 18 gros plans, avec les angles signalés par JD (couché, vu d'en bas, de dos, sous la cape, intérieur de la capuche, tenu par la tête, le pied ou le bras, après « Debout »). Résultats dans `polish_before.png` (v1), `polish_after.png` (v2) `polish_after2.png` (v2.1) et `polish_after3.png` (v3, textures IA).
+- `test/polish.mjs` + `test/sheet.py` : planche de 18 gros plans, avec les angles signalés par JD (couché, vu d'en bas, de dos, sous la cape, intérieur de la capuche, tenu par la tête, le pied ou le bras, après « Debout »). Résultats dans `polish_before.png` (v1), `polish_after.png` (v2) et `polish_after2.png` (v2.1).
 - `test/close.mjs` : très gros plans de la nuque et de la capuche, debout et couché.
 - `test/video.mjs` : images de `ragdoll_demo.mp4`. `test/interact.mjs` : vrais événements souris et tactiles. `test/jitter.mjs` : vitesses au repos.
 - Le mode `?test` passe en pas manuel (`window.__app.advance(s)`), et `?test&debug` affiche les colliders.
